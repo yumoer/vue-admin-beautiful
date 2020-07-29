@@ -1,361 +1,125 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Layout from "@/layouts";
-import EmptyLayout from "@/layouts/EmptyLayout";
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(VueRouter);
+Vue.use(Router);
 
-export const constantRoutes = [
-  {
-    path: "/login",
-    component: () => import("@/views/login/index"),
-    hidden: true,
-  },
-  {
-    path: "/redirect",
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: "/redirect/:path(.*)",
-        component: () => import("@/views/redirect/index"),
-      },
-    ],
-  },
-];
-
-/*当settings.js里authentication配置的是intelligence时，views引入交给前端配置*/
-export const asyncRoutes = [
-  {
-    path: "/",
-    component: Layout,
-    redirect: "/index",
-    children: [
-      {
-        path: "/index",
-        name: "Index",
-        component: () => import("@/views/index/index"),
-        meta: {
-          title: "首页",
-          icon: "home",
-          affix: true,
+export default new Router({
+    routes: [
+        {
+            path: '/',
+            redirect: '/dashboard'
         },
-      },
-    ],
-  },
-  {
-    path: "/test",
-    component: Layout,
-    redirect: "noRedirect",
-    children: [
-      {
-        path: "test",
-        name: "Test",
-        component: () => import("@/views/test/index"),
-        meta: {
-          title: "test",
-          icon: "marker",
-          roles: ["admin", "test"],
-        },
-      },
-    ],
-  },
-
-  {
-    path: "/byui",
-    component: Layout,
-    redirect: "noRedirect",
-    name: "Byui",
-    meta: { title: "组件", icon: "cloud" },
-    alwaysShow: true,
-    children: [
-      {
-        path: "permission",
-        name: "Permission",
-        component: () => import("@/views/byui/permission/index"),
-        meta: {
-          title: "权限控制",
-          roles: ["admin", "editor", "test"],
-        },
-      },
-      {
-        path: "menu1",
-        component: () => import("@/views/byui/nested/menu1/index"),
-        name: "Menu1",
-        meta: {
-          title: "嵌套路由 1",
-          roles: ["admin"],
-        },
-        alwaysShow: true,
-        children: [
-          {
-            path: "menu1-1",
-            component: () => import("@/views/byui/nested/menu1/menu1-1/index"),
-            name: "Menu1-1",
-            meta: { title: "嵌套路由 1-1" },
-            alwaysShow: true,
+        {
+            path: '/',
+            component: () => import(/* webpackChunkName: "home" */ '../components/common/Home.vue'),
+            meta: { title: '自述文件' },
             children: [
+                {
+                    path: '/dashboard',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+                    meta: { title: '系统首页' }
+                },
               {
-                path: "menu1-1-1-1",
-                component: () =>
-                  import("@/views/byui/nested/menu1/menu1-1/menu1-1-1/index"),
-                name: "Menu1-1-1",
-                meta: { title: "嵌套路由 1-1-1" },
+                path: '/spuList',
+                component: () => import(/* webpackChunkName: "table" */ '../components/page/spuList/spuList.vue'),
+                meta: { title: 'SPU列表' },
               },
-            ],
-          },
-        ],
-      },
-      {
-        path: "icon",
-        name: "Icon",
-        component: () => import("@/views/byui/icon/index"),
-        meta: { title: "常规图标", roles: ["admin"] },
-      },
-      {
-        path: "remixIcon",
-        name: "RemixIcon",
-        component: () => import("@/views/byui/icon/remixIcon"),
-        meta: { title: "小清新图标", roles: ["admin"] },
-      },
-      {
-        path: "colorfulIcon",
-        name: "ColorfulIcon",
-        component: () => import("@/views/byui/icon/colorfulIcon"),
-        meta: { title: "多彩图标", roles: ["admin"] },
-      },
-      {
-        path: "table",
-        name: "Table",
-        component: () => import("@/views/byui/table/index"),
-        meta: { title: "表格", roles: ["admin", "editor"] },
-      },
-      {
-        path: "form",
-        name: "Form",
-        component: () => import("@/views/byui/form/index"),
-        meta: { title: "表单", roles: ["admin"] },
-      },
-      {
-        path: "element",
-        name: "Element",
-        component: () => import("@/views/byui/element/index"),
-        meta: { title: "常用组件", roles: ["admin"] },
-      },
-      {
-        path: "tree",
-        name: "Tree",
-        component: () => import("@/views/byui/tree/index"),
-        meta: { title: "树", roles: ["admin"] },
-      },
-      {
-        path: "card",
-        name: "Card",
-        component: () => import("@/views/byui/card/index"),
-        meta: { title: "卡片", roles: ["admin"] },
-      },
-      {
-        path: "magnifier",
-        name: "Magnifier",
-        component: () => import("@/views/byui/magnifier/index"),
-        meta: { title: "放大镜", roles: ["admin"] },
-      },
-      {
-        path: "waterfall",
-        name: "Waterfall",
-        component: () => import("@/views/byui/waterfall/index"),
-        meta: { title: "瀑布屏", noCache: true, roles: ["admin"] },
-      },
-      {
-        path: "echarts",
-        name: "Echarts",
-        component: () => import("@/views/byui/echarts/index"),
-        meta: { title: "图表", roles: ["admin"] },
-      },
-
-      {
-        path: "loading",
-        name: "Loading",
-        component: () => import("@/views/byui/loading/index"),
-        meta: { title: "loading", roles: ["admin"] },
-      },
-      {
-        path: "player",
-        name: "Player",
-        component: () => import("@/views/byui/player/index"),
-        meta: { title: "视频播放器", roles: ["admin"] },
-      },
-      {
-        path: "markdownEditor",
-        name: "MarkdownEditor",
-        component: () => import("@/views/byui/markdownEditor/index"),
-        meta: { title: "markdown编辑器", roles: ["admin"] },
-      },
-      {
-        path: "editor",
-        name: "Editor",
-        component: () => import("@/views/byui/editor/index"),
-        meta: { title: "富文本编辑器", roles: ["admin"] },
-      },
-      {
-        path: "qrCode",
-        name: "QrCode",
-        component: () => import("@/views/byui/qrCode/index"),
-        meta: { title: "二维码", roles: ["admin"] },
-      },
-      {
-        path: "backToTop",
-        name: "BackToTop",
-        component: () => import("@/views/byui/backToTop/index"),
-        meta: { title: "返回顶部", roles: ["admin"] },
-      },
-      {
-        path: "lodash",
-        name: "Lodash",
-        component: () => import("@/views/byui/lodash/index"),
-        meta: { title: "lodash", roles: ["admin"] },
-      },
-      {
-        path: "imgComparison",
-        name: "ImgComparison",
-        component: () => import("@/views/byui/imgComparison/index"),
-        meta: { title: "图像拖拽比对", roles: ["admin"] },
-      },
-      {
-        path: "codeGenerator",
-        name: "CodeGenerator",
-        component: () => import("@/views/byui/codeGenerator/index"),
-        meta: { title: "代码生成机", roles: ["admin"] },
-      },
-      {
-        path: "markdown",
-        name: "Markdown",
-        component: () => import("@/views/byui/markdown/index"),
-        meta: { title: "markdown阅读器", roles: ["admin"] },
-      },
-      {
-        path: "smallComponents",
-        name: "SmallComponents",
-        component: () => import("@/views/byui/smallComponents/index"),
-        meta: { title: "小组件", roles: ["admin"] },
-      },
-
-      {
-        path: "upload",
-        name: "Upload",
-        component: () => import("@/views/byui/upload/index"),
-        meta: { title: "上传", roles: ["admin"] },
-      },
-      {
-        path: "/excel",
-        component: EmptyLayout,
-        redirect: "noRedirect",
-        name: "Excel",
-        meta: {
-          title: "Excel",
+              {
+                path: '/spuDetails',
+                component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/spuList/spuDetails2.vue'),
+                meta: { title: 'SPU详情' }
+              },
+              {
+                path: '/skuList',
+                component: () => import(/* webpackChunkName: "table" */ '../components/page/skuList/skuList.vue'),
+                meta: { title: 'SKU列表' }
+              },
+              {
+                path: '/skuDetails',
+                component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/skuList/skuDetails.vue'),
+                meta: { title: 'SKU详情' }
+              },
+                {
+                    path: '/icon',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
+                    meta: { title: '自定义图标' }
+                },
+                {
+                    path: '/table',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
+                    meta: { title: '基础表格' }
+                },
+                {
+                    path: '/tabs',
+                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
+                    meta: { title: 'tab选项卡' }
+                },
+                {
+                    path: '/form',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
+                    meta: { title: '基本表单' }
+                },
+                {
+                    // 富文本编辑器组件
+                    path: '/editor',
+                    component: () => import(/* webpackChunkName: "editor" */ '../components/page/VueEditor.vue'),
+                    meta: { title: '富文本编辑器' }
+                },
+                {
+                    // markdown组件
+                    path: '/markdown',
+                    component: () => import(/* webpackChunkName: "markdown" */ '../components/page/Markdown.vue'),
+                    meta: { title: 'markdown编辑器' }
+                },
+                {
+                    // 图片上传组件
+                    path: '/upload',
+                    component: () => import(/* webpackChunkName: "upload" */ '../components/page/Upload.vue'),
+                    meta: { title: '文件上传' }
+                },
+                {
+                    // vue-schart组件
+                    path: '/charts',
+                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
+                    meta: { title: 'schart图表' }
+                },
+                {
+                    // 拖拽列表组件
+                    path: '/drag',
+                    component: () => import(/* webpackChunkName: "drag" */ '../components/page/DragList.vue'),
+                    meta: { title: '拖拽列表' }
+                },
+                {
+                    // 拖拽Dialog组件
+                    path: '/dialog',
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/DragDialog.vue'),
+                    meta: { title: '拖拽弹框' }
+                },
+                {
+                    // 国际化组件
+                    path: '/i18n',
+                    component: () => import(/* webpackChunkName: "i18n" */ '../components/page/I18n.vue'),
+                    meta: { title: '国际化' }
+                },
+                {
+                    // 权限页面
+                    path: '/permission',
+                    component: () => import(/* webpackChunkName: "permission" */ '../components/page/Permission.vue'),
+                    meta: { title: '权限测试', permission: true }
+                },
+            ]
         },
-        children: [
-          {
-            path: "export-excel",
-            component: () => import("@/views/byui/excel/export-excel"),
-            name: "ExportExcel",
-            meta: { title: "导出Excel" },
-          },
-          {
-            path: "export-selected-excel",
-            component: () => import("@/views/byui/excel/select-excel"),
-            name: "SelectExcel",
-            meta: { title: "导出选中行" },
-          },
-          {
-            path: "export-merge-header",
-            component: () => import("@/views/byui/excel/merge-header"),
-            name: "MergeHeader",
-            meta: { title: "导出合并" },
-          },
-          {
-            path: "upload-excel",
-            component: () => import("@/views/byui/excel/upload-excel"),
-            name: "UploadExcel",
-            meta: { title: "上传Excel" },
-          },
-        ],
-      },
-      {
-        path: "sticky",
-        name: "Sticky",
-        component: () => import("@/views/byui/sticky/index"),
-        meta: { title: "sticky吸附", roles: ["admin"] },
-      },
-      {
-        path: "log",
-        name: "Log",
-        component: () => import("@/views/byui/errorLog/index"),
-        meta: { title: "错误日志模拟", roles: ["admin"] },
-      },
-      {
-        path: "news",
-        name: "News",
-        component: () => import("@/views/byui/news/index"),
-        meta: { title: "新闻（可能存在跨域）", roles: ["admin"] },
-      },
-      {
-        path: "more",
-        name: "More",
-        component: () => import("@/views/byui/more/index"),
-        meta: { title: "更多组件", roles: ["admin"] },
-      },
+        {
+            path: '/login',
+            component: () => import(/* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            meta: { title: '登录' }
+        },
     ],
-  },
-  {
-    path: "/error",
-    component: EmptyLayout,
-    redirect: "noRedirect",
-    name: "Error",
-    meta: { title: "错误页", icon: "bug" },
-    alwaysShow: true,
-    children: [
-      {
-        path: "/401",
-        name: "401",
-        component: () => import("@/views/401"),
-        meta: { title: "401" },
-      },
-      {
-        path: "/404",
-        name: "404",
-        component: () => import("@/views/404"),
-        meta: { title: "404" },
-      },
-    ],
-  },
-  {
-    path: "*",
-    redirect: "/404",
-    hidden: true,
-  },
-];
-
-const router = new VueRouter({
-  mode: "hash",
-  scrollBehavior: () => ({
-    y: 0,
-  }),
-  routes: constantRoutes,
+    scrollBehavior (to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return { x: 0, y: 0 }
+      }
+    }
 });
-
-export function resetRouter() {
-  router.matcher = new VueRouter({
-    mode: "hash",
-    scrollBehavior: () => ({
-      y: 0,
-    }),
-    routes: constantRoutes,
-  }).matcher;
-}
-
-const routerPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch((error) => error);
-};
-export default router;
